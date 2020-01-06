@@ -23,6 +23,8 @@ data = resp.json()
 message_count = format(data['messages'])
 ```
 
+## Full code
+-------------
 
 ```
 import docker
