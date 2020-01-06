@@ -1,5 +1,28 @@
 # py-rmq
 ---------
+RabbitMQ provides a REST API for getting info about vhosts,queues and messages in the queue
+https://pulse.mozilla.org/api/
+
+using which we'll be getting whether a queue has messages waiting and will spawn a listener (docker container)
+to consume the messages.
+Containers running for more than 100 seconds without any messages in the related queue will be removed.
+
+## commands for getting queues and their message count
+---------------------------------------------------
+getting queues:
+
+```
+response = requests.get('http://rmq_username:rmq_passwd@localhost:15672/api/queues/%s' % vhost)
+queues = [format(queue['name']) for queue in response.json()]
+```
+getting message count based on queue:
+
+```
+resp = requests.get('http://rmq_username:rmq_passwd@localhost:15672/api/queues/%s/%s' %(vhost,queue))
+data = resp.json()
+message_count = format(data['messages'])
+```
+
 
 ```
 import docker
@@ -85,4 +108,7 @@ for queue in queues:
             container_status=0
     print("message_count=%s,container_name:%s,container_uptime=%s,container_status=%s" % (message_count,container_name,container_uptime,container_status))
     invoke_container_manager(message_count, container_name, run_command, container_uptime, container_status)
-    ```
+```
+
+  Refer Docker sdk for python
+    
